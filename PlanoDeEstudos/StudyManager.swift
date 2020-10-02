@@ -1,4 +1,5 @@
 import Foundation
+import UserNotifications
 
 class StudyManager {
     
@@ -27,6 +28,8 @@ class StudyManager {
     }
     
     func removePlan(at index: Int) {
+        //Remover notificacoes pendentes
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [studyPlans[index].id])
         studyPlans.remove(at: index)
         savePlans()
     }

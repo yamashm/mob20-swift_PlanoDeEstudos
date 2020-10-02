@@ -14,6 +14,8 @@ class StudyPlanViewController: UIViewController {
     // MARK: - Super Methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        dpDate.minimumDate = Date()
     }
 
     // MARK: - IBActions
@@ -33,8 +35,13 @@ class StudyPlanViewController: UIViewController {
         content.sound = UNNotificationSound.default
         content.categoryIdentifier = "Lembrete"
         
+        //Gatilho por tempo
         //Para usar o repeats, o timeinterval deve ser maior ou igual a 60 segundos
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        
+        //Gatilho por data
+        //let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: dpDate.date)
+        //let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         
         let request  = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         

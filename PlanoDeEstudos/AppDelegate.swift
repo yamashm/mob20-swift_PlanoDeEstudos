@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         center.delegate = self
         center.getNotificationSettings { (settings) in
             switch settings.authorizationStatus{
+            //case .authorized:
+                
             case .notDetermined:
                 //requisição de permissão
                 self.center.requestAuthorization(options: [.alert, .sound, .badge, .carPlay]) { (authorized, error) in
@@ -29,6 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 break
             }
         }
+        //Regsitra o device na apple para receber notificacoes remotas
+        application.registerForRemoteNotifications()
+        
+        
         
         let confirmAction = UNNotificationAction(identifier: ActionIdentifier.confirm, title: "já estudei", options: [.foreground])
         let cancelAction = UNNotificationAction(identifier: ActionIdentifier.cancel, title: "Cancelar", options: [])
@@ -37,6 +43,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         center.setNotificationCategories([category])
         
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        //Pega byte a byte os dados do token
+        let token = deviceToken.reduce("") {
+            $0 + String(format: "%02x", $1)
+        }
+        print(token)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(error)
     }
 }
 
@@ -66,6 +84,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate{
             break;
         case UNNotificationDefaultActionIdentifier:
             //usuario tocou na notificacao em si
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "Orange")
+            
+            window?.rootViewController?.show(vc, sender: nil)
             break;
         case UNNotificationDismissActionIdentifier:
             //usuario fechou (dismiss) a notificacao
